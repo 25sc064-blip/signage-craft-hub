@@ -13,8 +13,9 @@ function HomePage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-foreground px-4 py-24 text-background">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent" />
+      <section className="relative overflow-hidden px-4 py-24 text-background" style={{ minHeight: "500px" }}>
+        <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" width={1920} height={1080} />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/70 to-foreground/40" />
         <div className="relative mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <div className="mb-4 inline-block rounded-full bg-primary/20 px-4 py-1.5 text-xs font-medium text-primary-foreground">
