@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ShoppingCart, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/products")({
+export const Route = createFileRoute("/products/")({
   component: ProductsPage,
 });
 
