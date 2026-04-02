@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
+import heroImage from "@/assets/hero-signage.jpg";
 import { ArrowRight, Award, Zap, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/")({
