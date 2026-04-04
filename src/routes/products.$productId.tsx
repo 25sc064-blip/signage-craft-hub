@@ -1,10 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/products/$productId")({
   component: ProductDetailPage,
@@ -39,8 +40,16 @@ function ProductDetailPage() {
       });
   }, [productId]);
 
-  const handleAddToCart = () => {
+  const nav = useNavigate();
+
+  const handleAddToCart = async () => {
     if (!product) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("Please log in to add items to your cart");
+      nav({ to: "/login" });
+      return;
+    }
     addItem({ id: product.id, name: product.name, price: product.price, image_url: product.image_url });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

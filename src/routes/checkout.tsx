@@ -31,6 +31,11 @@ function CheckoutPage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Redirect to login if not authenticated
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) navigate({ to: "/login" });
+    });
+
     supabase.from("shop_settings").select("key, value").in("key", ["ecocash_number", "payment_instructions", "whatsapp_number"]).then(({ data }) => {
       (data || []).forEach((s: { key: string; value: string }) => {
         if (s.key === "ecocash_number") setEcocashNumber(s.value);
