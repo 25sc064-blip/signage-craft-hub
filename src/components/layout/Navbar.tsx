@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import type { User as SupaUser } from "@supabase/supabase-js";
+import logoImg from "@/assets/logo.jpeg";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,14 +62,8 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Logo area */}
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">S</span>
-          </div>
-          <div>
-            <span className="text-lg font-bold text-foreground">Supacrown</span>
-            <span className="ml-1 text-xs text-muted-foreground">SignageHub</span>
-          </div>
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logoImg} alt="Supacrown Investments" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop nav */}
