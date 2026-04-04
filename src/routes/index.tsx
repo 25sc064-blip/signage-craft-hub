@@ -38,7 +38,7 @@ function HomePage() {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button size="lg" variant="outline" className="border-background/30 text-background hover:bg-background/10">
+                <Button size="lg" variant="outline" className="border-background/30 text-foreground bg-background/80 hover:bg-background">
                   Contact Us
                 </Button>
               </Link>
