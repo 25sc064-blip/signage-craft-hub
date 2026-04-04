@@ -3,6 +3,7 @@ import { ShoppingCart, Menu, X, LogOut, User, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/contexts/CartContext";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 export function Navbar() {
