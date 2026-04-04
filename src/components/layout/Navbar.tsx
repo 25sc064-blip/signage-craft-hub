@@ -11,6 +11,7 @@ export function Navbar() {
   const [user, setUser] = useState<SupaUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const { count } = useCart();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
