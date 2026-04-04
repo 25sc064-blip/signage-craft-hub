@@ -3,7 +3,8 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 export const Route = createFileRoute("/products/$productId")({
   component: ProductDetailPage,
@@ -23,6 +24,8 @@ function ProductDetailPage() {
   const { productId } = Route.useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [added, setAdded] = useState(false);
+  const { addItem } = useCart();
 
   useEffect(() => {
     supabase
@@ -35,6 +38,13 @@ function ProductDetailPage() {
         setLoading(false);
       });
   }, [productId]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    addItem({ id: product.id, name: product.name, price: product.price, image_url: product.image_url });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   if (loading) {
     return (
@@ -89,10 +99,13 @@ function ProductDetailPage() {
                 {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : "Out of Stock"}
               </span>
             </div>
-            <div className="mt-8">
-              <Button size="lg" disabled={product.stock_quantity === 0} className="w-full sm:w-auto">
-                <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+            <div className="mt-8 flex gap-3">
+              <Button size="lg" disabled={product.stock_quantity === 0} onClick={handleAddToCart} className="w-full sm:w-auto">
+                {added ? <><Check className="mr-2 h-4 w-4" /> Added!</> : <><ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart</>}
               </Button>
+              <Link to="/cart">
+                <Button size="lg" variant="outline">View Cart</Button>
+              </Link>
             </div>
           </div>
         </div>

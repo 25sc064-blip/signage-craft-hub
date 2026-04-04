@@ -3,6 +3,7 @@ import { ShoppingCart, Menu, X, LogOut, User, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/contexts/CartContext";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 export function Navbar() {
@@ -10,6 +11,7 @@ export function Navbar() {
   const [user, setUser] = useState<SupaUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const { count } = useCart();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -96,7 +98,14 @@ export function Navbar() {
                 <Button variant="ghost" size="icon"><User className="h-4 w-4" /></Button>
               </Link>
               <Link to="/cart">
-                <Button variant="ghost" size="icon"><ShoppingCart className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="relative">
+                  <ShoppingCart className="h-4 w-4" />
+                  {count > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                      {count}
+                    </span>
+                  )}
+                </Button>
               </Link>
               <Button variant="ghost" size="icon" onClick={handleLogout}>
                 <LogOut className="h-4 w-4" />
