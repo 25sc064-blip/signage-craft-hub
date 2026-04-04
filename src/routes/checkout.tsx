@@ -197,6 +197,14 @@ function CheckoutPage() {
                 <p className="mt-1 text-sm text-muted-foreground">{paymentInstructions}</p>
               )}
               <p className="mt-2 text-sm font-medium">Amount: <strong>${total.toFixed(2)}</strong></p>
+              {ecocashNumber && (
+                <a
+                  href={`tel:*151*1*1*${ecocashNumber.replace(/[^0-9]/g, "")}*${Math.round(total)}%23`}
+                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+                >
+                  📞 Dial USSD to Pay
+                </a>
+              )}
             </div>
 
             <div>
