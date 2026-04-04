@@ -39,8 +39,16 @@ function ProductDetailPage() {
       });
   }, [productId]);
 
-  const handleAddToCart = () => {
+  const nav = useNavigate();
+
+  const handleAddToCart = async () => {
     if (!product) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("Please log in to add items to your cart");
+      nav({ to: "/login" });
+      return;
+    }
     addItem({ id: product.id, name: product.name, price: product.price, image_url: product.image_url });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
