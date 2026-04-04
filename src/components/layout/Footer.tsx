@@ -50,8 +50,7 @@ export function Footer() {
             <p className="text-sm opacity-70">
               Zimdef Building<br />
               Btwn 9th Ave & 8th Ave<br />
-              Fort Street, Bulawayo<br />
-              TIN#2000799948
+              Fort Street, Bulawayo
             </p>
           </div>
         </div>

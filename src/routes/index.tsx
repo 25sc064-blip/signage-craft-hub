@@ -84,7 +84,7 @@ function HomePage() {
               <Button size="lg" variant="secondary">Create Account</Button>
             </Link>
             <Link to="/products">
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-foreground bg-background/80 hover:bg-background">
                 View Products
               </Button>
             </Link>
