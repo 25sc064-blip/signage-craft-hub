@@ -212,10 +212,6 @@ function CheckoutPage() {
               )}
             </div>
 
-            <div>
-              <Label>EcoCash Reference Number</Label>
-              <Input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="e.g. MP123456789" />
-            </div>
 
             <div>
               <Label>Upload Payment Screenshot</Label>
