@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Eye } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin/payments")({
   component: AdminPayments,
@@ -21,6 +22,7 @@ interface Payment {
 
 function AdminPayments() {
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
 
   const load = async () => {
     const { data } = await supabase.from("payments").select("*").order("created_at", { ascending: false });
@@ -34,10 +36,22 @@ function AdminPayments() {
     load();
   };
 
+  const viewProof = async (path: string) => {
+    const { data } = await supabase.storage.from("payment-proofs").createSignedUrl(path, 300);
+    if (data?.signedUrl) setProofUrl(data.signedUrl);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold">Payments</h1>
       <p className="text-sm text-muted-foreground">Verify EcoCash payment proofs</p>
+
+      <Dialog open={!!proofUrl} onOpenChange={() => setProofUrl(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogTitle>Payment Proof</DialogTitle>
+          {proofUrl && <img src={proofUrl} alt="Payment proof" className="w-full rounded-lg" />}
+        </DialogContent>
+      </Dialog>
 
       <div className="mt-6 overflow-x-auto rounded-xl border">
         <table className="w-full text-sm">
@@ -59,26 +73,26 @@ function AdminPayments() {
                 <td className="px-4 py-3">{p.method}</td>
                 <td className="px-4 py-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                    p.status === "verified" ? "bg-success/20 text-success" :
-                    p.status === "rejected" ? "bg-destructive/20 text-destructive" :
-                    "bg-warning/20 text-warning-foreground"
+                    p.status === "verified" ? "bg-green-100 text-green-700" :
+                    p.status === "rejected" ? "bg-red-100 text-red-700" :
+                    "bg-yellow-100 text-yellow-700"
                   }`}>{p.status}</span>
                 </td>
                 <td className="px-4 py-3 text-xs">{p.reference_number || "—"}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-1">
                     {p.proof_image_url && (
-                      <a href={p.proof_image_url} target="_blank" rel="noopener noreferrer">
-                        <Button variant="ghost" size="sm">Proof</Button>
-                      </a>
+                      <Button variant="ghost" size="sm" onClick={() => viewProof(p.proof_image_url!)}>
+                        <Eye className="mr-1 h-4 w-4" /> Proof
+                      </Button>
                     )}
                     {p.status === "pending" && (
                       <>
                         <Button variant="ghost" size="icon" onClick={() => updateStatus(p.id, "verified")}>
-                          <CheckCircle className="h-4 w-4 text-success" />
+                          <CheckCircle className="h-4 w-4 text-green-600" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => updateStatus(p.id, "rejected")}>
-                          <XCircle className="h-4 w-4 text-destructive" />
+                          <XCircle className="h-4 w-4 text-red-600" />
                         </Button>
                       </>
                     )}
