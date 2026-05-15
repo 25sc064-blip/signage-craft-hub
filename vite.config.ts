@@ -77,9 +77,7 @@ function devClientErrorLogger() {
             if (lineno != null) loc += `:${lineno}`;
             if (colno != null) loc += `:${colno}`;
           }
-          server.config.logger.error(
-            `\n[client] ${label}: ${message}${loc}`,
-          );
+          server.config.logger.error(`\n[client] ${label}: ${message}${loc}`);
           if (stack) {
             server.config.logger.error(stack);
           }
@@ -111,7 +109,9 @@ function devServerFnErrorLogger() {
     apply: "serve" as const,
     enforce: "pre" as const,
     configureServer(server: import("vite").ViteDevServer) {
-      (globalThis as Record<string, unknown>)[HMR_SEND_KEY] = (data: unknown) => {
+      (globalThis as Record<string, unknown>)[HMR_SEND_KEY] = (
+        data: unknown,
+      ) => {
         server.ws.send({
           type: "custom",
           event: "server-fn-error",
@@ -171,7 +171,13 @@ export default defineConfig(({ command, mode }) => {
     envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
   }
 
+  // ✅ Base path (can be controlled from .env)
+  // Example: VITE_BASE_PATH=/myapp/
+  const basePath = env.VITE_BASE_PATH || "/";
+
   return {
+    base: basePath, // ✅ added base path support
+
     server: {
       host: "::",
       port: 8080,
@@ -181,7 +187,14 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
-      dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "@tanstack/react-query",
+        "@tanstack/query-core",
+      ],
     },
     plugins: [
       tailwindcss(),
@@ -190,7 +203,9 @@ export default defineConfig(({ command, mode }) => {
       }),
       devClientErrorLogger(),
       devServerFnErrorLogger(),
-      ...(useCloudflare ? [cloudflare({ viteEnvironment: { name: "ssr" } })] : []),
+      ...(useCloudflare
+        ? [cloudflare({ viteEnvironment: { name: "ssr" } })]
+        : []),
       tanstackStart(),
       viteReact(),
       mode === "development" && componentTagger(),
