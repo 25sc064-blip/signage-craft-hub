@@ -41,7 +41,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/supabase-js": "^2.101.1",
 
-    "@tanstack/start": "1.162.9",
+    "@tanstack/start": "^1.0.0",
 
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-router": "1.162.9",
