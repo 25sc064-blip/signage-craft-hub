@@ -1,18 +1,23 @@
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react"; // ✅ changed here
 import path from "path";
+import { defineConfig, loadEnv } from "vite";
+import tsConfigPaths from "vite-tsconfig-paths";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  // Load env file based on `mode`
   const env = loadEnv(mode, process.cwd(), "");
 
+  // Optional: define env vars for direct replacement
   const envDefine: Record<string, string> = {};
   for (const [key, value] of Object.entries(env)) {
     envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
   }
 
   return {
+    // Base path support (example: /myapp/)
     base: env.VITE_BASE_PATH || "/",
 
     server: {
@@ -24,10 +29,6 @@ export default defineConfig(({ mode }) => {
     },
 
     define: envDefine,
-
-    plugins: [react(), mode === "development" && componentTagger()].filter(
-      Boolean,
-    ),
 
     resolve: {
       alias: {
@@ -42,5 +43,15 @@ export default defineConfig(({ mode }) => {
         "@tanstack/query-core",
       ],
     },
+
+    plugins: [
+      tailwindcss(),
+      tsConfigPaths({
+        projects: ["./tsconfig.json"],
+      }),
+      tanstackStart(),
+      viteReact(),
+      mode === "development" && componentTagger(),
+    ].filter(Boolean),
   };
 });
